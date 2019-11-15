@@ -17,19 +17,42 @@ $(function(){
 
   // decelerating to zero velocity 
   function easeOutQuart (t) { return 1-(--t)*t*t*t }
+  const easeInQuart = function (t) { return t*t*t*t }
+
   let animationStartTime = 0;
   const animationTimeInMs = 3000;
+  const baseSpeed = 100;
+  const minSpeed = 10;
+  const maxSpeed = 300;
+  const numFinalFrames = 3;
+  let finalFrameCount = 0;
 
   // console.log(colorArray[Math.floor(Math.random()*colorArray.length)]);
 
-  function blink(){
+
+  function calcWhenNextFrame() {
     const currentTime = new Date().getTime();
-    // console.log('currentTime', currentTime);
-    const elapsedTime = currentTime - animationStartTime;
-    // console.log('elapsedTime', elapsedTime);
+    console.log('currentTime', currentTime);
+    const elapsedTime = new Date().getTime() - animationStartTime;
+    console.log('elapsedTime', elapsedTime);
     const scaledT = elapsedTime / animationTimeInMs;
-    // console.log('scaledT', scaledT);
-    // console.log(easeOutQuart(scaledT));
+
+    console.log('scaledT', scaledT);
+    console.log(baseSpeed * (easeInQuart(scaledT)));
+    const candidateSpeed = baseSpeed * (easeInQuart(scaledT));
+    if (candidateSpeed < minSpeed) { return minSpeed; }
+    if (candidateSpeed > maxSpeed) { return maxSpeed; }
+    return candidateSpeed;
+  }
+
+  function blink(){
+    console.log('trying to blink');
+    uniforms.u_droste_distortion.value = false;
+    uniforms.u_blades.value = Math.ceil(Math.random() * 20);
+    uniforms.u_scale.value = (Math.random() * 10) + 0.5;
+    uniforms.u_droste_distortion.value = false;
+
+
 
     $rows = $('.cel');
     $rows.removeClass('flash').removeAttr("style").html("");
@@ -54,14 +77,26 @@ $(function(){
     chosenCel = $rows[Math.floor(Math.random()*$rows.length)];
     $(chosenCel).addClass('flash');  
     console.log($(chosenCel));
-  };
+    const elapsedTime = new Date().getTime() - animationStartTime;
+    if (elapsedTime > animationTimeInMs) {
+      if (finalFrameCount > numFinalFrames) {
+        stop()
+      } else {
+        finalFrameCount+=1;
+        setTimeout(blink, maxSpeed);
+      }
+    } else {
+      add = setTimeout(blink,calcWhenNextFrame());
+    }
+  }
 
   function start() {
+    console.log('start again');
     // event.stopPropagation();
     $(chosenCel).removeClass('flash');
     clearTimeout(flash);
     animationStartTime = new Date().getTime();
-    add = setInterval(blink,500);
+    add = setTimeout(blink,500);
     $('#spins').html('<p>Spins: ' + spins + '</p>');
   }
 
@@ -98,6 +133,7 @@ $(function(){
     // event.stopPropagation();
     clearInterval(add);
     checkFreeSpin();  
+    finalFrameCount = 0;
 
     $('#score').text("$ " + score);
     flash(chosenCel, 5, 100);
@@ -132,13 +168,14 @@ $(function(){
 
 
   $('#target').on('click',function(){
-    if($(this).attr('data-click-state') == 1) {
-      $(this).attr('data-click-state', 0)
-      stop(event);
-    } else {
-      $(this).attr('data-click-state', 1)
-      start(event);
-    }    
+    start(event);
+    // if($(this).attr('data-click-state') == 1) {
+    //   $(this).attr('data-click-state', 0)
+    //   stop(event);
+    // } else {
+    //   $(this).attr('data-click-state', 1)
+    //   start(event);
+    // }    
   });
 
 });
