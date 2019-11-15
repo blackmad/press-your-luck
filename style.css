@@ -105,11 +105,11 @@ input[type="button"] {
 }
 
 .cel {
-/*   background-image: url('http://orig07.deviantart.net/7cf0/f/2013/071/2/f/press_by_designerboy7-d5xuww5.png'); */
+  background-image: url('img/art.jpg'); 
   background-size: 4.8em 4.8em;
   background-repeat: no-repeat;
   border-radius: 1em;
-  border: .2em solid;
+  border: .1em solid;
   /*margin: .5em;*/
   text-align: center;
   box-sizing: border-box;
@@ -120,7 +120,7 @@ input[type="button"] {
 .sprite {
   width: 46.5em;
   height: 47em;
-  background-image: url('http://orig07.deviantart.net/7cf0/f/2013/071/2/f/press_by_designerboy7-d5xuww5.png');
+  background-image: url('img/art.jpg');
 /*   background-position: -2318px -465px; */
 }
 
