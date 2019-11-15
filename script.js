@@ -18,6 +18,9 @@ $(function(){
   // decelerating to zero velocity 
   function easeOutQuart (t) { return 1-(--t)*t*t*t }
   const easeInQuart = function (t) { return t*t*t*t }
+  const elastic = function(pos) {
+    return -1 * Math.pow(4,-8*pos) * Math.sin((pos*6-1)*(2*Math.PI)/2) + 1;
+  }
 
   let animationStartTime = 0;
   const animationTimeInMs = 3000;
@@ -26,6 +29,7 @@ $(function(){
   const maxSpeed = 300;
   const numFinalFrames = 3;
   let finalFrameCount = 0;
+  let inAnimation = false;
 
   // console.log(colorArray[Math.floor(Math.random()*colorArray.length)]);
 
@@ -39,7 +43,7 @@ $(function(){
 
     console.log('scaledT', scaledT);
     console.log(baseSpeed * (easeInQuart(scaledT)));
-    const candidateSpeed = baseSpeed * (easeInQuart(scaledT));
+    const candidateSpeed = baseSpeed * (elastic(scaledT));
     if (candidateSpeed < minSpeed) { return minSpeed; }
     if (candidateSpeed > maxSpeed) { return maxSpeed; }
     return candidateSpeed;
@@ -48,8 +52,8 @@ $(function(){
   function blink(){
     console.log('trying to blink');
     uniforms.u_droste_distortion.value = false;
-    uniforms.u_blades.value = Math.ceil(Math.random() * 20);
-    uniforms.u_scale.value = (Math.random() * 10) + 0.5;
+    uniforms.u_blades.value = Math.ceil(Math.random() * 5);
+    uniforms.u_scale.value = (Math.random() * 5) + 0.5;
     uniforms.u_droste_distortion.value = false;
 
 
@@ -131,6 +135,7 @@ $(function(){
 
   function stop(){
     // event.stopPropagation();
+    inAnimation = false;
     clearInterval(add);
     checkFreeSpin();  
     finalFrameCount = 0;
@@ -168,7 +173,9 @@ $(function(){
 
 
   $('#target').on('click',function(){
-    start(event);
+    if (!inAnimation) {
+      start(event);
+    }
     // if($(this).attr('data-click-state') == 1) {
     //   $(this).attr('data-click-state', 0)
     //   stop(event);
