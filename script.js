@@ -1,10 +1,7 @@
-$(function(){
+const choices = JSON.parse(decodeURIComponent(window.location.search.substring(1)));
 
-  var colorArray = [
-    {value: 470,   text: "470",    free_spin: "0", img: "choice1.png", pos: "0px 0px"},
-    {value: 750,   text: "750",    free_spin: "0", img: "choice2.png", pos: "0px 0px"},
-    {value: 1750,  text: "1750",   free_spin: "0", img: "choice3.png", pos: "0px 0px"},
-  ];
+
+$(function(){
 
   //buttons
   var input = document.getElementById("input");
@@ -23,7 +20,7 @@ $(function(){
   }
 
   let animationStartTime = 0;
-  const animationTimeInMs = 3000;
+  const animationTimeInMs = 4000;
   const baseSpeed = 100;
   const minSpeed = 10;
   const maxSpeed = 300;
@@ -31,22 +28,57 @@ $(function(){
   let finalFrameCount = 0;
   let inAnimation = false;
 
-  // console.log(colorArray[Math.floor(Math.random()*colorArray.length)]);
-
 
   function calcWhenNextFrame() {
-    const currentTime = new Date().getTime();
-    console.log('currentTime', currentTime);
     const elapsedTime = new Date().getTime() - animationStartTime;
-    console.log('elapsedTime', elapsedTime);
     const scaledT = elapsedTime / animationTimeInMs;
 
-    console.log('scaledT', scaledT);
-    console.log(baseSpeed * (easeInQuart(scaledT)));
     const candidateSpeed = baseSpeed * (elastic(scaledT));
     if (candidateSpeed < minSpeed) { return minSpeed; }
     if (candidateSpeed > maxSpeed) { return maxSpeed; }
     return candidateSpeed;
+  }
+
+  var getContrastYIQ = function(color) {
+    var hex = '#';
+    var r, g, b;
+    if (color.indexOf(hex) > -1) {
+      r = parseInt(color.substr(1, 2), 16);
+      g = parseInt(color.substr(3, 2), 16);
+      b = parseInt(color.substr(5, 2), 16);
+    } else {
+      color = color.match(/\d+/g);
+      r = color[0];
+      g = color[1];
+      b = color[2];
+    }
+  
+    var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return (yiq >= 128) ? 'black' : 'white';
+  }
+
+
+  function fillGrid() {
+    $rows = $('.cel');
+    $rows.removeClass('flash').removeAttr("style").html("");
+
+    $rows.each(function(){
+      arraySelection = choices[Math.floor(Math.random()*choices.length)];
+      // console.log(arraySelection);
+
+        $(this).css("background-color", arraySelection.color);
+
+        if (arraySelection.fontSize) {
+          $(this).append($(`<span style="font-size: ${arraySelection.fontSize}; color: ${arraySelection.textColor}">${arraySelection.name}</span>`));
+          // $(this).css("font-size", arraySelection.fontSize)
+        } else {
+          $(this).html(arraySelection.name);  
+          textFit(this);
+          arraySelection.fontSize = $(this).find('.textFitted').css('font-size');
+          arraySelection.textColor = getContrastYIQ(arraySelection.color)
+          console.log(arraySelection.fontSize);
+        }
+     });
   }
 
   function blink(){
@@ -56,27 +88,7 @@ $(function(){
     uniforms.u_scale.value = (Math.random() * 5) + 0.5;
     uniforms.u_droste_distortion.value = false;
 
-
-
-    $rows = $('.cel');
-    $rows.removeClass('flash').removeAttr("style").html("");
-
-    $rows.each(function(){
-      arraySelection = colorArray[Math.floor(Math.random()*colorArray.length)];
-      // console.log(arraySelection);
-
-        if (arraySelection.value == -1) {
-          $(this).css("background-image", "url(img/" + arraySelection.img + ")")
-            .attr('value', arraySelection.value)
-            .attr('free_spin', arraySelection.free_spin);
-        } else {
-          $(this).css("background-image", "url(img/" + arraySelection.img + ")")
-            // .css('background-position', arraySelection.pos)
-            // .css('background-size', "800px 600px")
-            .attr('value', arraySelection.value)
-            .attr('free_spin', arraySelection.free_spin);
-        }
-     });
+    fillGrid();
 
     chosenCel = $rows[Math.floor(Math.random()*$rows.length)];
     $(chosenCel).addClass('flash');  
@@ -137,11 +149,41 @@ $(function(){
     // event.stopPropagation();
     inAnimation = false;
     clearInterval(add);
-    checkFreeSpin();  
+    // checkFreeSpin();  
     finalFrameCount = 0;
 
-    $('#score').text("$ " + score);
     flash(chosenCel, 5, 100);
+    flashWinner(chosenCel);
+  }
+
+
+  var maxBigFlashTimes = 10;
+  var bigFlashSpeed = 150;
+  var bigFlashTimes = 0;
+  function flashWinner(elem) {
+    winnerName = $(elem).find('span').text();
+    textColor = $(elem).find('span').css('color');
+    bgColor = $(elem).css('background-color');
+    if (bigFlashTimes % 2 == 0) {
+      tmp = textColor
+      textColor = bgColor
+      bgColor = tmp;
+    }
+
+    const $el  = $('#winnerBanner')
+    $el.show();
+    $el.css('color', textColor)
+    $el.css('background-color', bgColor)
+    $el.html(winnerName);
+    textFit($el);
+
+    if (bigFlashTimes > maxBigFlashTimes) {
+      $el.hide();
+    } else {
+      setTimeout(() => flashWinner(elem), bigFlashSpeed);
+    }
+
+    bigFlashTimes += 1;
   }
 
   function flash(elem, times, speed) {
@@ -184,5 +226,7 @@ $(function(){
     //   start(event);
     // }    
   });
+
+  fillGrid();
 
 });

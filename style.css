@@ -18,6 +18,19 @@ input[type="button"] {
   margin: auto;
 }
 
+#winnerBanner {
+  width: 70%;
+  height: 20em;
+  position: absolute;
+  top: 5px;
+  left: 5%;
+  display: none;
+  border-radius: 1em;
+  padding: 10%;
+  display: flex;
+  align-items: center;
+}
+
 .whammyPic{
   margin-left: 2px;
   background-image: url('./img/whammy2bw.png');
@@ -105,7 +118,7 @@ input[type="button"] {
 }
 
 .cel {
-  background-image: url('img/art.jpg'); 
+  /* background-image: url('img/art.jpg');  */
   background-size: 4.8em 4.8em;
   background-repeat: no-repeat;
   border-radius: 1em;
@@ -114,13 +127,16 @@ input[type="button"] {
   text-align: center;
   box-sizing: border-box;
   /*padding: 0.6em*/
+  padding: 15px;
+  display: flex;
+  align-items: center;
 
 }
 
 .sprite {
   width: 46.5em;
   height: 47em;
-  background-image: url('img/art.jpg');
+  /* background-image: url('img/art.jpg'); */
 /*   background-position: -2318px -465px; */
 }
 
