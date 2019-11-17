@@ -6,7 +6,7 @@ function makeRow() {
   console.log(div)
   console.log(row)
   div.append(row)
-  
+
 }
 
 function launch() {
@@ -21,7 +21,7 @@ function launch() {
     }
   }
 
-  window.location = '/index.html?' + encodeURIComponent(JSON.stringify(options));
+  window.location = 'index.html?' + encodeURIComponent(JSON.stringify(options));
 }
 
 function initControls() {
