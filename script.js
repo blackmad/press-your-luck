@@ -240,6 +240,15 @@ $(document).ready(function() {
     inStopAnimation = true;
   }
 
+  const calculateScale = () => {
+    const boardSize = 600;
+    wScale = window.innerWidth / boardSize
+    hScale = window.innerHeight / boardSize
+    scale = wScale > hScale ? hScale : wScale;
+    $('body').css('-webkit-transform-origin', 'top')
+    $('body').css('transform', `scale(${scale})`);
+  }
+
   console.log("attaching button handler");
 
   const handleClick = () => {
@@ -270,6 +279,7 @@ $(document).ready(function() {
   });
 
   fillGrid();
+  calculateScale();
 
   var mc = new Hammer.Manager($('body')[0], {});
   mc.add( new Hammer.Tap({ event: 'singletap', taps: 1 }) );
