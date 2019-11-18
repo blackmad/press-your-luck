@@ -25,6 +25,7 @@ $(document).ready(function() {
   var $rows = [];
   var chosenCel;
   var whammyCount = 0;
+  let requestedFullscreen = false;
 
   // decelerating to zero velocity
   function easeOutQuart(t) {
@@ -259,10 +260,14 @@ $(document).ready(function() {
     const boardSize = 600;
     wScale = window.innerWidth / boardSize;
     hScale = window.innerHeight / boardSize;
-    scale = wScale > hScale ? hScale : wScale;
+    console.log(window.innerHeight, window.innerWidth)
+    scale = wScale > hScale ? hScale : wScale;    
     $("body").css("-webkit-transform-origin", "top");
     $("body").css("transform", `scale(${scale})`);
+    console.log(scale);
+    console.log($('body'));
   };
+  window.calculateScale = calculateScale;
 
   console.log("attaching button handler");
 
@@ -272,7 +277,7 @@ $(document).ready(function() {
       console.log("starting");
       inAnimation = true;
       start(event);
-    } if (inStopAnimation) {
+    } else if (inStopAnimation) {
       // pass
     } else {
       console.log("stopping");
@@ -286,14 +291,28 @@ $(document).ready(function() {
     //   start(event);
     // }
 
+    if (!requestedFullscreen) {
       console.log('fs')
       if ($('body')[0].requestFullscreen) {
         console.log('fs2')
         $('body')[0].requestFullscreen();
+        setTimeout(2500, calculateScale)
       }
+     if ($('body')[0].webkitRequestFullscreen) {
+        console.log('fs2')
+        $('body')[0].webkitRequestFullscreen();
+        setTimeout(2500, calculateScale)
+      }
+      requestedFullscreen = true;
+    }
   };
 
   $("#target").on("click", handleClick);
+
+  $(window).on("resize", function(e) {
+    calculateScale();
+  })
+
 
   $(document).on("keypress", function(e) {
     if (e.which == 13) {
