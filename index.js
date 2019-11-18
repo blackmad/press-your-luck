@@ -220,8 +220,7 @@ var camvideo = document.getElementById('monitor');
 
   if (!navigator.getUserMedia)
   {
-    document.getElementById('errorMessage').innerHTML =
-      'Sorry. <code>navigator.getUserMedia()</code> is not available.';
+      alert('Sorry. <code>navigator.getUserMedia()</code> is not available.');
   } else {
     navigator.getUserMedia({video: true}, gotStream, noStream);
   }
