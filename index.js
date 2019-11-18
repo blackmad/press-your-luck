@@ -242,7 +242,6 @@ function gotStream(stream)
     stream.stop();   };
 
   stream.onended = noStream;
-  reinitCameraVars();
 }
 
 function noStream(e)

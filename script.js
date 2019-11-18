@@ -1,6 +1,22 @@
-const choices = JSON.parse(
-  decodeURIComponent(window.location.search.substring(1))
-);
+let choices =  [
+{
+  name: 'option1',
+  color: '#ff0000'
+},
+{
+  name: 'option2',
+  color: '#00ff00'
+},
+{
+  name: 'option3',
+  color: '#0000ff'
+}
+]
+if (window.location.search.substring(1).length > 1) {
+  choices = JSON.parse(
+    decodeURIComponent(window.location.search.substring(1))
+  );
+}
 
 $(document).ready(function() {
   //buttons
