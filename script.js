@@ -285,6 +285,12 @@ $(document).ready(function() {
     //   $(this).attr('data-click-state', 1)
     //   start(event);
     // }
+
+      console.log('fs')
+      if ($('body')[0].requestFullscreen) {
+        console.log('fs2')
+        $('body')[0].requestFullscreen();
+      }
   };
 
   $("#target").on("click", handleClick);
@@ -301,4 +307,6 @@ $(document).ready(function() {
   var mc = new Hammer.Manager($("body")[0], {});
   mc.add(new Hammer.Tap({ event: "singletap", taps: 1 }));
   mc.on("singletap", handleClick);
+
+
 });
