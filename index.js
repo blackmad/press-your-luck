@@ -58,14 +58,14 @@ function init() {
     u_time: { type: "f", value: 1.0 },
     u_resolution: { type: "v2", value: new THREE.Vector2() },
     u_scale: { type: "f", value: 1. },
-    u_blades: { type: "i", value: 5 },
+    u_blades: { type: "i", value: 1 },
     u_texture: { type: "t", value: videoTexture },
     u_rotation: { type: "f", value: 0. },
     u_rotation_k: { type: "f", value: 0. },
-    u_pos: { type: "v2", value: new THREE.Vector2(.2,.2) },
+    u_pos: { type: "v2", value: new THREE.Vector2(.5,.5) },
     u_mouse: { type: "v2", value: new THREE.Vector2() },
     u_kaleidoscope_distortion: { type: "b", value: true },
-    u_droste_distortion: { type: "b", value: true },
+    u_droste_distortion: { type: "b", value: false },
     u_droste_rad1: { type: "f", value: .5 },
     u_droste_rad2: { type: "f", value: 1.5 }
   };
@@ -112,22 +112,24 @@ function init() {
     img.src = image;
   }
 
-  // Dat gui
-  var gui = new dat.GUI();
-  gui.add(uniforms.u_scale, 'value', .1, 10).name("Scale");
-  gui.add(uniforms.u_blades, 'value', 1, 20).name("Blades");
-  gui.add(config, 'mouse_pos').name("move on mouse");
-  gui.add(uniforms.u_pos.value, 'x', 0, 1).name("x").listen().step(0.01);
-  gui.add(uniforms.u_pos.value, 'y', 0, 1).name("y").listen().step(0.01);
-  gui.add(uniforms.u_rotation, 'value', -Math.PI, Math.PI).name("texture rotation").step(0.01);
-  gui.add(uniforms.u_rotation_k, 'value', -Math.PI, Math.PI).name("rotation").step(0.01);
+  const makeDatGui = () => {
+    // Dat gui
+    var gui = new dat.GUI();
+    gui.add(uniforms.u_scale, 'value', .1, 10).name("Scale");
+    gui.add(uniforms.u_blades, 'value', 1, 20).name("Blades");
+    gui.add(config, 'mouse_pos').name("move on mouse");
+    gui.add(uniforms.u_pos.value, 'x', 0, 1).name("x").listen().step(0.01);
+    gui.add(uniforms.u_pos.value, 'y', 0, 1).name("y").listen().step(0.01);
+    gui.add(uniforms.u_rotation, 'value', -Math.PI, Math.PI).name("texture rotation").step(0.01);
+    gui.add(uniforms.u_rotation_k, 'value', -Math.PI, Math.PI).name("rotation").step(0.01);
 
-  gui.add(uniforms.u_kaleidoscope_distortion, 'value').name("kaleidoscope");
-  gui.add(uniforms.u_droste_distortion, 'value').name("droste");
-  gui.add(uniforms.u_droste_rad1, 'value', -1., 2.).name("droste radius 1").step(0.01);
-  gui.add(uniforms.u_droste_rad2, 'value', -1., 2.).name("droste radius 2").step(0.01);
+    gui.add(uniforms.u_kaleidoscope_distortion, 'value').name("kaleidoscope");
+    gui.add(uniforms.u_droste_distortion, 'value').name("droste");
+    gui.add(uniforms.u_droste_rad1, 'value', -1., 2.).name("droste radius 1").step(0.01);
+    gui.add(uniforms.u_droste_rad2, 'value', -1., 2.).name("droste radius 2").step(0.01);
 
-  gui.close();
+    gui.close();
+  }
 
 
   setInterval(function(){ 
@@ -198,8 +200,9 @@ function render() {
 	if ( video.readyState === video.HAVE_ENOUGH_DATA )
 	{
 		videoImageContext.drawImage( video, 0, 0, videoImage.width, videoImage.height );
-		if ( videoTexture )
-			videoTexture.needsUpdate = true;
+		if ( videoTexture ) {
+      videoTexture.needsUpdate = true;
+    }
 	}
   renderer.render( scene, camera );
 }
@@ -239,6 +242,7 @@ function gotStream(stream)
     stream.stop();   };
 
   stream.onended = noStream;
+  reinitCameraVars();
 }
 
 function noStream(e)

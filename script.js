@@ -29,7 +29,7 @@ $(document).ready(function() {
   };
 
   const baseSpeed = 70;
-  const minSpeed = 30;
+  const minSpeed = 100;
   const maxSpeed = 300;
   const numFinalFrames = 3;
   let finalFrameCount = 0;
@@ -51,6 +51,13 @@ $(document).ready(function() {
     }
     return candidateSpeed;
   }
+
+  window.reinitCameraVars = () => {
+    uniforms.u_blades.value = 1;
+    uniforms.u_scale.value = 1;
+    uniforms.u_pos.value.x = 0.5;
+    uniforms.u_pos.value.y = 0.5;
+  };
 
   var getContrastYIQ = function(color) {
     var hex = "#";
@@ -103,17 +110,15 @@ $(document).ready(function() {
   }
 
   function blink() {
-    console.log("trying to blink");
     uniforms.u_droste_distortion.value = false;
-    uniforms.u_blades.value = Math.ceil(Math.random() * 5);
-    uniforms.u_scale.value = Math.random() * 5 + 0.5;
+    uniforms.u_blades.value = Math.ceil(Math.random() * 20);
+    uniforms.u_scale.value = Math.random() * 3 + 0.8;
     uniforms.u_droste_distortion.value = false;
 
     fillGrid();
 
     chosenCel = $rows[Math.floor(Math.random() * $rows.length)];
     $(chosenCel).addClass("flash");
-    console.log($(chosenCel));
     if (inStopAnimation) {
       const elapsedTime = new Date().getTime() - stopAnimationStartTime;
       if (elapsedTime > stopAnimationTimeInMs) {
@@ -195,7 +200,9 @@ $(document).ready(function() {
     if (bigFlashTimes > maxBigFlashTimes) {
       bigFlashTimes = 0;
       $el.hide();
-      $el.css('z-index', -1);
+      $el.css("z-index", -1);
+
+      reinitCameraVars();
     } else {
       setTimeout(() => flashWinner(elem), bigFlashSpeed);
     }
@@ -263,4 +270,9 @@ $(document).ready(function() {
   });
 
   fillGrid();
+
+  var mc = new Hammer.Manager($('body')[0], {});
+  mc.add( new Hammer.Tap({ event: 'singletap', taps: 1 }) );
+  mc.on("singletap", handleClick);
+
 });
