@@ -211,22 +211,41 @@ function addListeners(el, s, fn) {
   s.split(' ').forEach(e => el.addEventListener(e, fn, false));
 }
 
+function isIOS() {
+  var ua = window.navigator.userAgent;
+  return /(iPad|iPhone|iPod).*WebKit/.test(ua) && !/(CriOS|OPiOS)/.test(ua);
+}
 
 function onload() {
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-window.URL = window.URL || window.webkitURL;
+  window.URL = window.URL || window.webkitURL;
 
-var camvideo = document.getElementById('monitor');
+  var camvideo = document.getElementById('monitor');
 
-  if (!navigator.getUserMedia)
-  {
-      alert('Sorry. <code>navigator.getUserMedia()</code> is not available.');
+
+  if (true || isIOS()) {
+
+    var constraints = {
+         audio: false,
+         video: {
+             facingMode: 'user'
+         }
+    }
+
+     navigator.mediaDevices.getUserMedia(constraints).then((s) => gotStream)
+
   } else {
-    navigator.getUserMedia({video: true}, gotStream, noStream);
+    if (!navigator.getUserMedia)
+    {
+        alert('Sorry. <code>navigator.getUserMedia()</code> is not available.');
+    } else {
+      navigator.getUserMedia({video: true}, gotStream, noStream);
+    }
   }
 
 function gotStream(stream)
 {
+  console.log('got stream')
  //  debugger;
   // if (window.URL)
   // {   camvideo.src = window.URL.createObjectURL(stream);   }
