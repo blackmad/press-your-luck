@@ -271,6 +271,8 @@ $(document).ready(function() {
       console.log("starting");
       inAnimation = true;
       start(event);
+    } if (inStopAnimation) {
+      // pass
     } else {
       console.log("stopping");
       startStopping(event);
