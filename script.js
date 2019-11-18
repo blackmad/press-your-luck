@@ -176,8 +176,6 @@ $(document).ready(function() {
 
   function stop() {
     // event.stopPropagation();
-    inAnimation = false;
-    inStopAnimation = false;
     clearInterval(add);
     // checkFreeSpin();
     finalFrameCount = 0;
@@ -215,6 +213,9 @@ $(document).ready(function() {
       bigFlashTimes = 0;
       $el.hide();
       $el.css("z-index", -1);
+
+      inAnimation = false;
+      inStopAnimation = false;
 
       reinitCameraVars();
     } else {
