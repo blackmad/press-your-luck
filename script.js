@@ -1,21 +1,19 @@
-let choices =  [
-{
-  name: 'option1',
-  color: '#ff0000'
-},
-{
-  name: 'option2',
-  color: '#00ff00'
-},
-{
-  name: 'option3',
-  color: '#0000ff'
-}
-]
+let choices = [
+  {
+    name: "option1",
+    color: "#ff0000"
+  },
+  {
+    name: "option2",
+    color: "#00ff00"
+  },
+  {
+    name: "option3",
+    color: "#0000ff"
+  }
+];
 if (window.location.search.substring(1).length > 1) {
-  choices = JSON.parse(
-    decodeURIComponent(window.location.search.substring(1))
-  );
+  choices = JSON.parse(decodeURIComponent(window.location.search.substring(1)));
 }
 
 $(document).ready(function() {
@@ -258,12 +256,12 @@ $(document).ready(function() {
 
   const calculateScale = () => {
     const boardSize = 600;
-    wScale = window.innerWidth / boardSize
-    hScale = window.innerHeight / boardSize
+    wScale = window.innerWidth / boardSize;
+    hScale = window.innerHeight / boardSize;
     scale = wScale > hScale ? hScale : wScale;
-    $('body').css('-webkit-transform-origin', 'top')
-    $('body').css('transform', `scale(${scale})`);
-  }
+    $("body").css("-webkit-transform-origin", "top");
+    $("body").css("transform", `scale(${scale})`);
+  };
 
   console.log("attaching button handler");
 
@@ -297,8 +295,7 @@ $(document).ready(function() {
   fillGrid();
   calculateScale();
 
-  var mc = new Hammer.Manager($('body')[0], {});
-  mc.add( new Hammer.Tap({ event: 'singletap', taps: 1 }) );
+  var mc = new Hammer.Manager($("body")[0], {});
+  mc.add(new Hammer.Tap({ event: "singletap", taps: 1 }));
   mc.on("singletap", handleClick);
-
 });
