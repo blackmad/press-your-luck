@@ -262,8 +262,8 @@ $(document).ready(function() {
     hScale = window.innerHeight / boardSize;
     console.log(window.innerHeight, window.innerWidth)
     scale = wScale > hScale ? hScale : wScale;    
-    $("body").css("-webkit-transform-origin", "top");
-    $("body").css("transform", `scale(${scale})`);
+    $("#board").css("-webkit-transform-origin", "top");
+    $("#board").css("transform", `scale(${scale})`);
     console.log(scale);
     console.log($('body'));
   };
