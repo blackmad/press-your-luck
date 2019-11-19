@@ -181,12 +181,12 @@ $(document).ready(function() {
     // checkFreeSpin();
     finalFrameCount = 0;
 
-    flash(chosenCel, 5, 100);
+    flash(chosenCel, 5, 1250);
     flashWinner(chosenCel);
   }
 
-  var maxBigFlashTimes = 10;
-  var bigFlashSpeed = 150;
+  var maxBigFlashTimes = 12;
+  var bigFlashSpeed = 250;
   var bigFlashTimes = 0;
   function flashWinner(elem) {
     winnerName = $(elem)

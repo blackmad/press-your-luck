@@ -20,9 +20,9 @@ input[type="button"] {
 
 #winnerBanner {
   width: 70%;
-  height: 20em;
+  height: 60%;
   position: absolute;
-  top: 5px;
+  top: 5%;
   left: 5%;
   display: none;
   border-radius: 1em;
